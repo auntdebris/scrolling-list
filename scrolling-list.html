@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Scroll reveal</title>
+    <style>
+      body {
+        margin: 0;
+        background: #211a3b;
+      }
+
+      .header {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 320px;
+        height: 58px;
+        background: url(header.png) top center no-repeat;
+        z-index: 99;
+      }
+
+      .inner {
+        position: relative;
+        margin: 0 auto;
+        width: 320px;
+        padding-top: 58px;
+        height: 2000px;
+      }
+
+      .fund {
+        position: relative;
+        width: 320px;
+        height: 480px;
+        background: url(fund-item-no-cta.png) top center no-repeat;
+      }
+
+      .fund::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: url(fund-item.png) top center no-repeat;
+        opacity: 0;
+        transition: opacity 400ms ease-in-out;
+      }
+
+      .fund.active::after {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header"></div>
+    <div class="main">
+      <div class="inner">
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+        <div class="fund"></div>
+      </div>
+    </div>
+
+    <script src="jquery.min.js"></script>
+
+    <script>
+      var scrollTimeout;
+
+      function isElementInView(element, scrollY) {
+        var offTop = $(element).offset().top;
+        var elemHeight = $(element).height();
+
+        var wHeight = window.innerHeight;
+        var wScroll = window.scrollY;
+
+        if (
+          wScroll + wHeight > offTop + elemHeight / 2 &&
+          wScroll + wHeight < offTop + wHeight + elemHeight
+        ) {
+          return true;
+        }
+
+        return false;
+      }
+
+      function init() {
+        $(window).on("scroll", onScroll);
+        onScroll();
+      }
+
+      function onScroll() {
+        var funds = document.getElementsByClassName("fund");
+        var wHeight = window.innerHeight;
+
+        $.each(funds, function(index, fund) {
+          $(fund).removeClass("active");
+        });
+
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(highlightFund, 500);
+      }
+
+      function highlightFund() {
+        var funds = document.getElementsByClassName("fund");
+        var wHeight = window.innerHeight;
+
+        $.each(funds, function(index, fund) {
+          if (isElementInView(fund, wHeight)) {
+            $(fund).addClass("active");
+          } else {
+            $(fund).removeClass("active");
+          }
+        });
+      }
+
+      setTimeout(init, 500);
+    </script>
+  </body>
+</html>
